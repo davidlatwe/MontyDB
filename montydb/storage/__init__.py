@@ -16,7 +16,7 @@ class StorageDuplicateKeyError(StorageError):
 class AbstractStorage(object):
     """
     """
-
+    contractor_cls = None
     config_fname = "monty.storage.cfg"
 
     def __init__(self, repository, storage_config):
@@ -116,10 +116,6 @@ class AbstractStorage(object):
     def repository(self):
         return self._repository
 
-    @property
-    def contractor_cls(self):
-        raise NotImplementedError("")
-
     @classmethod
     @abstractmethod
     def config(cls, **storage_kwargs):
@@ -145,14 +141,11 @@ class AbstractStorage(object):
 
 
 class AbstractDatabase(object):
+    contractor_cls = None
 
     def __init__(self, storage, subject):
         self._name = subject._name
         self._storage = storage
-
-    @property
-    def contractor_cls(self):
-        raise NotImplementedError("")
 
     @abstractmethod
     def collection_exists(self, col_name):
@@ -172,6 +165,7 @@ class AbstractDatabase(object):
 
 
 class AbstractCollection(object):
+    contractor_cls = None
 
     def __init__(self, database, subject):
         self._name = subject._name
@@ -186,10 +180,6 @@ class AbstractCollection(object):
             check_keys=check_keys,
             codec_options=self.coptions
         )
-
-    @property
-    def contractor_cls(self):
-        raise NotImplementedError("")
 
     @abstractmethod
     def write_one(self):
